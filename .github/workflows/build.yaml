@@ -20,15 +20,7 @@ jobs:
         with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
           fetch-depth: 0
-          
-      - name: Setup NodeJS
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 11
-
-      - name: Install dependencies
-        run: yarn install
-        
+             
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2.0.1
         env:
