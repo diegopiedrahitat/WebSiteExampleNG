@@ -1,3 +1,4 @@
+name: Build
 on:
   # Trigger analysis when pushing to your main branches, and when creating a pull request.
   push:
@@ -9,17 +10,27 @@ on:
   pull_request:
       types: [opened, synchronize, reopened]
 
-name: Main Workflow
 jobs:
   sonarqube:
+    name: SonarQube Scan
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-      with:
+      - name: Checkout source code
+      - uses: actions/checkout@v3
+        with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
-        fetch-depth: 0
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          fetch-depth: 0
+          
+      - name: Setup NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn install
+        
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2.0.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
